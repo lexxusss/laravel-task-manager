@@ -5,11 +5,14 @@ namespace App;
 use App\Model\Task;
 use App\Model\Team;
 use App\Model\UserTeam;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Routing\Route;
 
 /**
  * App\User
@@ -79,7 +82,7 @@ class User extends Authenticatable
 
     /*--- RELATIONS ---*/
     /**
-     * @return HasMany
+     * @return HasMany|Task
      */
     public function tasksCreated()
     {
@@ -87,7 +90,7 @@ class User extends Authenticatable
     }
 
     /**
-     * @return HasMany
+     * @return HasMany|Task
      */
     public function tasksExecuted()
     {
@@ -95,11 +98,58 @@ class User extends Authenticatable
     }
 
     /**
-     * @return BelongsToMany
+     * @param Team $team
+     * @return Task|Builder
+     */
+    public function tasksExecutedInTeam(Team $team)
+    {
+        return $this->tasksExecuted()->whereTeamId($team->id);
+    }
+
+    /**
+     * @return BelongsToMany|Team
      */
     public function teams()
     {
         return $this->belongsToMany(Team::class, UserTeam::class, 'user_id', 'team_id');
     }
+
+    /**
+     * @return HasMany|UserTeam
+     */
+    public function usersTeams()
+    {
+        return $this->hasMany(UserTeam::class, 'user_id', 'id');
+    }
     /*--- /RELATIONS ---*/
+
+
+    /*--- BOOLEANS ---*/
+    /**
+     * @param Team $team
+     * @return bool
+     */
+    public function isInTeam(Team $team)
+    {
+        return $this->teams()->whereId($team->id)->get()->isNotEmpty();
+    }
+
+    /**
+     * @param Team $team
+     * @return int|mixed
+     */
+    public function isAdminOfTeam(Team $team)
+    {
+        return $this->getUserTeam($team)->is_admin;
+    }
+    /*--- /BOOLEANS ---*/
+
+    /**
+     * @param Team $team
+     * @return UserTeam|null
+     */
+    public function getUserTeam(Team $team)
+    {
+        return $this->usersTeams()->whereTeamId($team->id)->first();
+    }
 }

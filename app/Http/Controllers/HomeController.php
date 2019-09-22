@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Helpers\AuthHelper;
+use App\Helpers\RequestsHelper;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\View\View;
 
@@ -23,10 +23,10 @@ class HomeController extends Controller
      */
     public function index()
     {
-        $user = AuthHelper::getAuthUser();
+        $user = RequestsHelper::getAuthUser();
 
         $teams = $user->teams;
 
-        return view('root', compact('user', 'teams'));
+        return view('home', compact('user', 'teams'));
     }
 }

@@ -4,10 +4,11 @@
 namespace App\Helpers;
 
 
+use App\Model\Team;
 use App\User;
 use Illuminate\Contracts\Auth\Authenticatable;
 
-class AuthHelper
+class RequestsHelper
 {
     /**
      * @return Authenticatable|User|null
@@ -15,5 +16,13 @@ class AuthHelper
     public static function getAuthUser()
     {
         return auth()->user();
+    }
+
+    /**
+     * @return Team|null
+     */
+    public static function getTeamFromRoute()
+    {
+        return request()->route('team');
     }
 }
