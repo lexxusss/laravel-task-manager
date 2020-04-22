@@ -73,6 +73,11 @@
         </nav>
 
         <main class="py-4">
+
+            <div class="errors-block">
+                @include('blocks.errors_block')
+            </div>
+
             @yield('content')
         </main>
     </div>

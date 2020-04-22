@@ -6,6 +6,7 @@ use App\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Collection;
 
 /**
  * App\Model\Team
@@ -28,6 +29,8 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\Team whereName($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\Team whereUpdatedAt($value)
  * @mixin \Eloquent
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Model\UserTeam[] $usersTeams
+ * @property-read int|null $users_teams_count
  */
 class Team extends Model
 {
@@ -56,5 +59,22 @@ class Team extends Model
     {
         return $this->belongsToMany(User::class, UserTeam::class, 'team_id', 'user_id');
     }
+
+    /**
+     * @return HasMany|UserTeam
+     */
+    public function usersTeams()
+    {
+        return $this->hasMany(UserTeam::class, 'team_id', 'id');
+    }
     /*--- /RELATIONS ---*/
+
+    /**
+     * @param User|null $forUser
+     * @return Collection
+     */
+    public function getCollaborators(User $forUser = null)
+    {
+        return $this->usersTeams()->whereNotIn('user_id', [$forUser->id ?? null])->get();
+    }
 }

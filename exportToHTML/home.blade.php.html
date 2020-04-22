@@ -1,0 +1,62 @@
+<html>
+<head>
+<title>home.blade.php</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+.s0 { color: #cc7832;}
+.s1 { color: #a9b7c6;}
+.s2 { color: #6a8759;}
+.s3 { color: #e8bf6a;}
+.s4 { color: #bababa;}
+.s5 { color: #a5c261;}
+.s6 { color: #a9b7c6;}
+.s7 { color: #9876aa;}
+.s8 { color: #a9b7c6;}
+.s9 { color: #a9b7c6;}
+</style>
+</head>
+<body bgcolor="#2b2b2b">
+<table CELLSPACING=0 CELLPADDING=5 COLS=1 WIDTH="100%" BGCOLOR="#606060" >
+<tr><td><center>
+<font face="Arial, Helvetica" color="#000000">
+home.blade.php</font>
+</center></td></tr></table>
+<pre><span class="s0">@extends(</span><span class="s2">'layouts.app'</span><span class="s0">)</span>
+
+<span class="s0">@section(</span><span class="s2">'content'</span><span class="s0">)</span>
+<span class="s3">&lt;div </span><span class="s4">class</span><span class="s5">=&quot;container&quot;</span><span class="s3">&gt;</span>
+    <span class="s3">&lt;div </span><span class="s4">class</span><span class="s5">=&quot;row justify-content-center&quot;</span><span class="s3">&gt;</span>
+        <span class="s0">@foreach (</span><span class="s7">$teams </span><span class="s0">as </span><span class="s7">$team</span><span class="s0">)</span>
+            <span class="s3">&lt;div </span><span class="s4">class</span><span class="s5">=&quot;col-lg-3 col-md-6 col-sm-6&quot;</span><span class="s3">&gt;</span>
+                <span class="s3">&lt;a </span><span class="s4">href</span><span class="s5">=&quot;</span><span class="s1">{{ </span><span class="s8">route</span><span class="s1">(</span><span class="s2">'edit_team'</span><span class="s0">, </span><span class="s1">[</span><span class="s2">'team' </span><span class="s1">=&gt; </span><span class="s7">$team</span><span class="s1">-&gt;</span><span class="s8">id</span><span class="s1">]) }}</span><span class="s5">&quot;</span><span class="s3">&gt;</span>
+                    <span class="s3">&lt;div </span><span class="s4">class</span><span class="s5">=&quot;card card-icon-bg card-icon-bg-primary o-hidden mb-4&quot;</span><span class="s3">&gt;</span>
+                        <span class="s3">&lt;div </span><span class="s4">class</span><span class="s5">=&quot;card-body text-center&quot;</span><span class="s3">&gt;</span>
+                            <span class="s3">&lt;div </span><span class="s4">class</span><span class="s5">=&quot;content&quot;</span><span class="s3">&gt;</span>
+                                <span class="s3">&lt;p </span><span class="s4">class</span><span class="s5">=&quot;lead text-primary text-24 mb-2&quot;</span><span class="s3">&gt;</span><span class="s1">{{ </span><span class="s7">$team</span><span class="s1">-&gt;</span><span class="s8">name </span><span class="s1">}}</span><span class="s3">&lt;/p&gt;</span>
+                                <span class="s3">&lt;a </span><span class="s4">class</span><span class="s5">=&quot;text-success btn&quot; </span><span class="s4">href</span><span class="s5">=&quot;</span><span class="s1">{{ </span><span class="s8">url</span><span class="s1">(</span><span class="s2">'tasks'</span><span class="s0">, </span><span class="s1">[</span><span class="s2">'team' </span><span class="s1">=&gt; </span><span class="s7">$team</span><span class="s1">-&gt;</span><span class="s8">id</span><span class="s1">]) }}</span><span class="s5">&quot;</span><span class="s3">&gt;</span><span class="s9">Tasks</span><span class="s3">&lt;/a&gt;</span>
+                                <span class="s3">&lt;a </span><span class="s4">class</span><span class="s5">=&quot;text-info btn&quot; </span><span class="s4">href</span><span class="s5">=&quot;</span><span class="s1">{{ </span><span class="s8">route</span><span class="s1">(</span><span class="s2">'collaborators'</span><span class="s0">, </span><span class="s1">[</span><span class="s2">'team' </span><span class="s1">=&gt; </span><span class="s7">$team</span><span class="s1">-&gt;</span><span class="s8">id</span><span class="s1">]) }}</span><span class="s5">&quot;</span><span class="s3">&gt;</span><span class="s9">Collaborators</span><span class="s3">&lt;/a&gt;</span>
+                            <span class="s3">&lt;/div&gt;</span>
+                        <span class="s3">&lt;/div&gt;</span>
+                    <span class="s3">&lt;/div&gt;</span>
+                <span class="s3">&lt;/a&gt;</span>
+            <span class="s3">&lt;/div&gt;</span>
+        <span class="s0">@endforeach</span>
+
+        <span class="s3">&lt;div </span><span class="s4">class</span><span class="s5">=&quot;col-lg-3 col-md-6 col-sm-6&quot;</span><span class="s3">&gt;</span>
+            <span class="s3">&lt;a </span><span class="s4">href</span><span class="s5">=&quot;</span><span class="s1">{{ </span><span class="s8">route</span><span class="s1">(</span><span class="s2">'new_team'</span><span class="s1">) }}</span><span class="s5">&quot;</span><span class="s3">&gt;</span>
+                <span class="s3">&lt;div </span><span class="s4">class</span><span class="s5">=&quot;card card-icon-bg card-icon-bg-primary o-hidden mb-4&quot;</span><span class="s3">&gt;</span>
+                    <span class="s3">&lt;div </span><span class="s4">class</span><span class="s5">=&quot;card-body text-center&quot;</span><span class="s3">&gt;</span>
+                        <span class="s3">&lt;i </span><span class="s4">class</span><span class="s5">=&quot;i-Add-User&quot;</span><span class="s3">&gt;&lt;/i&gt;</span>
+                        <span class="s3">&lt;div </span><span class="s4">class</span><span class="s5">=&quot;content&quot;</span><span class="s3">&gt;</span>
+                            <span class="s3">&lt;p </span><span class="s4">class</span><span class="s5">=&quot;lead text-success text-24 mb-2&quot;</span><span class="s3">&gt;</span><span class="s9">Create new team</span><span class="s3">&lt;/p&gt;</span>
+                        <span class="s3">&lt;/div&gt;</span>
+                    <span class="s3">&lt;/div&gt;</span>
+                <span class="s3">&lt;/div&gt;</span>
+            <span class="s3">&lt;/a&gt;</span>
+        <span class="s3">&lt;/div&gt;</span>
+    <span class="s3">&lt;/div&gt;</span>
+<span class="s3">&lt;/div&gt;</span>
+<span class="s0">@endsection</span>
+</pre>
+</body>
+</html>

@@ -15,6 +15,8 @@ class HomeController extends Controller
      */
     public function __construct()
     {
+        parent::__construct();
+
         $this->middleware('auth');
     }
 
@@ -23,10 +25,8 @@ class HomeController extends Controller
      */
     public function index()
     {
-        $user = RequestsHelper::getAuthUser();
+        $teams = $this->user->teams;
 
-        $teams = $user->teams;
-
-        return view('home', compact('user', 'teams'));
+        return view('home', compact('teams'));
     }
 }

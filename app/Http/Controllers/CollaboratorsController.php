@@ -3,12 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Model\Team;
+use App\Model\UserTeam;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\View\View;
 
-class TasksController extends Controller
+class CollaboratorsController extends Controller
 {
     /**
      * @param Team $team
@@ -16,19 +17,23 @@ class TasksController extends Controller
      */
     public function index(Team $team)
     {
-        $tasks = $this->user->tasksExecutedInTeam($team);
+        $collaborators = $team->getCollaborators($this->user);
 
-        return view('tasks/index', compact('tasks'));
+        return view('collaborators.index', compact('team', 'collaborators'));
     }
 
     /**
-     * Show the form for creating a new resource.
-     *
-     * @return Response
+     * @param Team $team
+     * @return Factory|View
      */
-    public function create()
+    public function create(Team $team)
     {
-        //
+        $title = "Team $team->name - create collaborator";
+        $formMode = 'create';
+
+        $collaborator = new UserTeam();
+
+        return view('collaborators.create_edit', compact('team', 'title', 'formMode', 'collaborator'));
     }
 
     /**

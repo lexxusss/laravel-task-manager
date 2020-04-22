@@ -45,6 +45,8 @@ use Illuminate\Routing\Route;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\User whereRememberToken($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\User whereUpdatedAt($value)
  * @mixin \Eloquent
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Model\UserTeam[] $usersTeams
+ * @property-read int|null $users_teams_count
  */
 class User extends Authenticatable
 {
@@ -131,7 +133,7 @@ class User extends Authenticatable
      */
     public function isInTeam(Team $team)
     {
-        return $this->teams()->whereId($team->id)->get()->isNotEmpty();
+        return !! $this->getUserTeam($team);
     }
 
     /**
