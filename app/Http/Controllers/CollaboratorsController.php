@@ -2,11 +2,16 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\UserTeamStatus;
+use App\Http\Requests\CollaboratorCreateRequest;
+use App\Http\Requests\CollaboratorUpdateRequest;
 use App\Model\Team;
 use App\Model\UserTeam;
+use App\Services\InvitationService;
+use App\User;
+use Exception;
 use Illuminate\Contracts\View\Factory;
-use Illuminate\Http\Request;
-use Illuminate\Http\Response;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
 
 class CollaboratorsController extends Controller
@@ -24,7 +29,7 @@ class CollaboratorsController extends Controller
 
     /**
      * @param Team $team
-     * @return Factory|View
+     * @return View
      */
     public function create(Team $team)
     {
@@ -37,58 +42,87 @@ class CollaboratorsController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
-     *
-     * @param  Request  $request
-     * @return Response
+     * @param  Team $team
+     * @param  CollaboratorCreateRequest  $request
+     * @return RedirectResponse
      */
-    public function store(Request $request)
+    public function store(Team $team, CollaboratorCreateRequest $request)
     {
-        //
+        $userCollaborator = User::firstOrCreate([
+            'email' => $request->get('email'),
+        ]);
+
+        $userTeam = UserTeam::firstOrCreate([
+            'user_id' => $userCollaborator->id,
+            'team_id' => $team->id,
+        ], [
+            'is_admin' => (bool) $request->get('is_admin'),
+            'supervised_by_id' => $request->get('supervised_by_id'),
+            'status' => UserTeamStatus::USER_STATUS_PENDING,
+        ]);
+
+        try {
+            app(InvitationService::class)->send($userTeam);
+        } catch (Exception $e) {
+            return redirect()
+                ->route('collaborators', ['team' => $team->id])
+                ->with('success',  "Collaborator $team->name was successfully created.")
+                ->with('error',  sprintf(
+                    "Invitation was not sent to user $userTeam->email. Details: %s",
+                    $e->getMessage()
+                ));
+        }
+
+        return redirect()
+            ->route("collaborators", ['team' => $team->id])
+            ->with('success',  "Collaborator $team->name was successfully created.")
+            ->with('success',  "Invitation was successfully sent to user $userTeam->email.");
     }
 
     /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return Response
+     * @param Team $team
+     * @param UserTeam $userTeam
+     * @return View
      */
-    public function show($id)
+    public function edit(Team $team, UserTeam $userTeam)
     {
-        //
+        $title = "Team $team->name - edit collaborator";
+        $formMode = 'edit';
+        $collaborator = $userTeam;
+
+        return view('collaborators.create_edit', compact('team', 'title', 'formMode', 'collaborator'));
     }
 
     /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return Response
+     * @param Team $team
+     * @param UserTeam $userTeam
+     * @param CollaboratorUpdateRequest $request
+     * @return RedirectResponse
      */
-    public function edit($id)
+    public function update(Team $team, UserTeam $userTeam, CollaboratorUpdateRequest $request)
     {
-        //
+        $userTeam->update([
+            'is_admin' => (bool) $request->get('is_admin'),
+            'supervised_by_id' => $request->get('supervised_by_id'),
+        ]);
+
+        return redirect()
+            ->route("collaborators", ['team' => $team->id])
+            ->with('success',  "Collaborator {$userTeam->user->email} was successfully updated.");
     }
 
     /**
-     * Update the specified resource in storage.
-     *
-     * @param  Request  $request
-     * @param  int  $id
-     * @return Response
+     * @param Team $team
+     * @param UserTeam $userTeam
+     * @return RedirectResponse
+     * @throws Exception
      */
-    public function update(Request $request, $id)
+    public function destroy(Team $team, UserTeam $userTeam)
     {
-        //
-    }
+        $userTeam->delete();
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return Response
-     */
-    public function destroy($id)
-    {
-        //
+        return redirect()
+            ->route("collaborators", ['team' => $team->id])
+            ->with('success',  "Collaborator {$userTeam->user->email} was successfully deleted.");
     }
 }

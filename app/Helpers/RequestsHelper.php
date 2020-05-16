@@ -19,10 +19,18 @@ class RequestsHelper
     }
 
     /**
-     * @return Team|null
+     * @return Team|null|object
      */
     public static function getTeamFromRoute()
     {
         return request()->route('team');
+    }
+
+    /**
+     * @return Team|null|object
+     */
+    public static function getUserTeamFromRoute()
+    {
+        return request()->route('userTeam');
     }
 }

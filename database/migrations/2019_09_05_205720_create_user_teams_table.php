@@ -38,7 +38,7 @@ class CreateUserTeamsTable extends Migration
                 ->onDelete('cascade');
             $table->foreign('supervised_by_id')
                 ->references('id')
-                ->on(User::TABLE_NAME)
+                ->on($this->table)
                 ->onDelete('set null');
 
             $table->unique(['user_id', 'team_id']);

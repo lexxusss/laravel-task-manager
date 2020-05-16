@@ -39,6 +39,8 @@ class UserTeam extends Pivot
 
     protected $table = self::TABLE_NAME;
 
+    public $incrementing = true;
+
     protected $fillable = [
         'user_id',
         'team_id',

@@ -75,6 +75,8 @@ class Team extends Model
      */
     public function getCollaborators(User $forUser = null)
     {
-        return $this->usersTeams()->whereNotIn('user_id', [$forUser->id ?? null])->get();
+        return $this->usersTeams()
+            ->whereNotIn('user_id', [$forUser->id ?? 0])
+            ->get();
     }
 }

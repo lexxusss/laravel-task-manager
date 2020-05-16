@@ -14,9 +14,7 @@ use Illuminate\View\View;
 class TeamsController extends Controller
 {
     /**
-     * Show the form for creating a new resource.
-     *
-     * @return Response
+     * @return \Illuminate\Contracts\Foundation\Application|Factory|View
      */
     public function create()
     {
@@ -29,10 +27,8 @@ class TeamsController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
-     *
-     * @param  TeamRequest  $request
-     * @return Response
+     * @param TeamRequest $request
+     * @return RedirectResponse
      */
     public function store(TeamRequest $request)
     {
@@ -42,22 +38,11 @@ class TeamsController extends Controller
             'user_id' => $this->user->id,
             'team_id' => $team->id,
             'is_admin' => true,
-            'supervisor' => null,
+            'supervised_by_id' => null,
             'status' => UserTeamStatus::USER_STATUS_ACTIVE,
         ]);
 
         return redirect()->route('teams')->with('success',  "Team $team->name was successfully created.");
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return Response
-     */
-    public function show($id)
-    {
-        //
     }
 
     /**
